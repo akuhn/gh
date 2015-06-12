@@ -27,7 +27,7 @@ then
     exit 1
 fi
 
-giturl=${giturl/git\@github\.com\:/https://github.com/}
+giturl=$(echo $giturl | sed 's/git@\(.*\):/https:\/\/\1\//')
 giturl=${giturl%\.git}
 
 if [ -z "$2" ]
@@ -37,9 +37,11 @@ else
     branch="$2"
 fi
 
+path=$(git rev-parse --show-prefix)
+
 if [ ! -z "$branch" ]
 then
-    giturl="${giturl}/tree/${branch}"
+    giturl="${giturl}/tree/${branch}/${path}"
 fi
 
 open $giturl
